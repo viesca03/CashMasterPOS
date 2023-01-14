@@ -1,0 +1,78 @@
+{
+  "CountryName": "United States",
+  "MainSymbol": "$",
+  "Denominations": [
+    {
+      "Image": "us_image1.png",
+      "Symbol": "¢",
+      "CurrencyName": "cent",
+      "Value": 0.01
+    },
+    {
+      "Image": "us_image2.png",
+      "Symbol": "¢",
+      "CurrencyName": "cents",
+      "Value": 0.05
+    },
+    {
+      "Image": "us_image3.png",
+      "Symbol": "¢",
+      "CurrencyName": "cents",
+      "Value": 0.10
+    },
+    {
+      "Image": "us_image4.png",
+      "Symbol": "¢",
+      "CurrencyName": "cents",
+      "Value": 0.25
+    },
+    {
+      "Image": "us_image5.png",
+      "Symbol": "¢",
+      "CurrencyName": "cents",
+      "Value": 0.50
+    },
+    {
+      "Image": "us_image6.png",
+      "Symbol": "$",
+      "CurrencyName": "dollar",
+      "Value": 1.00
+    },
+    {
+      "Image": "us_image7.png",
+      "Symbol": "$",
+      "CurrencyName": "dollars",
+      "Value": 2.00
+    },
+    {
+      "Image": "us_image8.png",
+      "Symbol": "$",
+      "CurrencyName": "dollars",
+      "Value": 5.00
+    },
+    {
+      "Image": "us_image9.png",
+      "Symbol": "$",
+      "CurrencyName": "dollars",
+      "Value": 10.00
+    },
+    {
+      "Image": "us_image10.png",
+      "Symbol": "$",
+      "CurrencyName": "dollars",
+      "Value": 20.00
+    },
+    {
+      "Image": "us_image11.png",
+      "Symbol": "$",
+      "CurrencyName": "dollars",
+      "Value": 50.00
+    },
+    {
+      "Image": "us_image12.png",
+      "Symbol": "$",
+      "CurrencyName": "dollars",
+      "Value": 100.00
+    }
+  ]
+}

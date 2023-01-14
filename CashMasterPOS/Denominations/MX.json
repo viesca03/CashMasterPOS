@@ -1,0 +1,72 @@
+{
+  "CountryName": "Mexico",
+  "MainSymbol": "$",
+  "Denominations": [
+    {
+      "Image": "mx_image1.png",
+      "Symbol": "¢",
+      "CurrencyName": "centavos",
+      "Value": 0.05
+    },
+    {
+      "Image": "mx_image2.png",
+      "Symbol": "¢",
+      "CurrencyName": "centavos",
+      "Value": 0.10
+    },
+    {
+      "Image": "mx_image3.png",
+      "Symbol": "¢",
+      "CurrencyName": "centavos",
+      "Value": 0.20
+    },
+    {
+      "Image": "mx_image4.png",
+      "Symbol": "¢",
+      "CurrencyName": "centavos",
+      "Value": 0.50
+    },
+    {
+      "Image": "mx_image5.png",
+      "Symbol": "$",
+      "CurrencyName": "peso",
+      "Value": 1.00
+    },
+    {
+      "Image": "mx_image6.png",
+      "Symbol": "$",
+      "CurrencyName": "pesos",
+      "Value": 2.00
+    },
+    {
+      "Image": "mx_image7.png",
+      "Symbol": "$",
+      "CurrencyName": "pesos",
+      "Value": 5.00
+    },
+    {
+      "Image": "mx_image8.png",
+      "Symbol": "$",
+      "CurrencyName": "pesos",
+      "Value": 10.00
+    },
+    {
+      "Image": "mx_image9.png",
+      "Symbol": "$",
+      "CurrencyName": "pesos",
+      "Value": 20.00
+    },
+    {
+      "Image": "mx_image10.png",
+      "Symbol": "$",
+      "CurrencyName": "pesos",
+      "Value": 50.00
+    },
+    {
+      "Image": "mx_image11.png",
+      "Symbol": "$",
+      "CurrencyName": "pesos",
+      "Value": 100.00
+    }
+  ]
+}
