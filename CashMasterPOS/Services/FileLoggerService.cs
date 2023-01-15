@@ -13,15 +13,14 @@ namespace CashMasterPOS.Services
     {
         private readonly string _filePath;
 
-        public FileLoggerService(string filePath)
+        public FileLoggerService()
         {
-            var directory = Path.GetDirectoryName(filePath);
+            _filePath = ConfigurationManager.AppSettings["LogFilePath"];
+            var directory = Path.GetDirectoryName(_filePath);
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
             }
-
-            _filePath = filePath;
         }
 
         public void Log(string message)

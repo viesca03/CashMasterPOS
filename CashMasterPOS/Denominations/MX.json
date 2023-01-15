@@ -67,6 +67,18 @@
       "Symbol": "$",
       "CurrencyName": "pesos",
       "Value": 100.00
+    },
+    {
+      "Image": "mx_image12.png",
+      "Symbol": "$",
+      "CurrencyName": "pesos",
+      "Value": 200.00
+    },
+    {
+      "Image": "mx_image13.png",
+      "Symbol": "$",
+      "CurrencyName": "pesos",
+      "Value": 500.00
     }
   ]
 }

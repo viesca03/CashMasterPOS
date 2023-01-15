@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,9 +15,9 @@ namespace CashMasterPOS.Services
     {
         private readonly string _country;
 
-        public DenominationService(string country)
+        public DenominationService()
         {
-            _country = country;
+            _country = ConfigurationManager.AppSettings["CurrentDenomination"];
         }
 
         public DenominationRootModel GetDenominations()

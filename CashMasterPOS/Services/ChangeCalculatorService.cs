@@ -1,4 +1,5 @@
-﻿using CashMasterPOS.Services;
+﻿using CashMasterPOS.Interfaces;
+using CashMasterPOS.Services;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -8,45 +9,38 @@ using System.Threading.Tasks;
 
 namespace CashMasterPOS.Services
 {
-    public class ChangeCalculatorService
+    public class ChangeCalculatorService : IChangeCalculator
     {
-        private readonly List<double> _denominations;
-        private readonly FileLoggerService _logService;
-        
-
-        public ChangeCalculatorService(List<double> denominations, FileLoggerService logService)
+        public Dictionary<double, int> CalculateChange(double price, Dictionary<double, int> payment)
         {
-            _denominations = denominations;
-            _logService = logService;
-        }
+            var result = new Dictionary<double, int>();
 
-        public Tuple<Dictionary<double, int>, bool> CalculateChange(double price, Dictionary<double, int> payment)
-        {
+            var denominations = GlobalService.DenominationService.GetDenominations().Denominations.Select(d => d.Value).ToList();
             //Verify that the total payment is greater than or equal to the price
             double totalPayment = payment.Sum(p => p.Key * p.Value);
 
             if (totalPayment < price)
             {
                 var error = "The total payment is less than the price";
-                _logService.Log("Transaction Error: " + error);
-                return new Tuple<Dictionary<double, int>, bool>(null, true);
+                GlobalService.LogService.Log("Transaction Error: " + error);
+                return result;
             }
 
             //Calculate change due
-            _logService.Log("Calculating the optimal change amount...");
+            GlobalService.LogService.Log("Calculating the optimal change amount...");
             double changeAmount = Math.Round((totalPayment - price), 2);
-            _denominations.Sort((a, b) => -1 * a.CompareTo(b));
+            denominations.Sort((a, b) => -1 * a.CompareTo(b));
 
-            var change = _denominations.ToDictionary(d => d, d => 0);
+            var change = denominations.ToDictionary(d => d, d => 0);
 
             //Iterate through the denominationValues in descending order
-            foreach (var denomination in _denominations)
+            foreach (var denomination in denominations)
             {
                 change[denomination] = (int)(changeAmount / denomination);
                 changeAmount -= change[denomination] * denomination;
             }
 
-            var result = new Tuple<Dictionary<double, int>, bool>(change, false);
+            result = change;
 
             return result;
         }

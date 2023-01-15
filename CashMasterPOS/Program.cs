@@ -5,31 +5,37 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CashMasterPOS.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CashMasterPOS
 {
-    internal class Program
+     public class Program
     {
-        private static readonly string _logFilePath = ConfigurationManager.AppSettings["LogFilePath"];
-        private static readonly string _currentDenomination = ConfigurationManager.AppSettings["CurrentDenomination"];
         private static string _mainSymbol;
-
-        private static readonly FileLoggerService _logService = new FileLoggerService(_logFilePath);
-        private static readonly DenominationService _denominationService = new DenominationService(_currentDenomination);
 
         public static void Main(string[] args)
         {
-            var currentDenomination = _denominationService.GetDenominations();
-            var denominations = currentDenomination.Denominations.Select(d => d.Value).ToList();
+            var services = new ServiceCollection();
+            services.AddTransient<ILogger, FileLoggerService>();
+            services.AddTransient<IDenomination, DenominationService>();
+            services.AddTransient<IChangeCalculator, ChangeCalculatorService>();
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            GlobalService.LogService = serviceProvider.GetService<ILogger>();
+            GlobalService.DenominationService = serviceProvider.GetService<IDenomination>();
+            GlobalService.ChangeCalculatorService = serviceProvider.GetService<IChangeCalculator>();
+
+
+            var currentDenomination = GlobalService.DenominationService.GetDenominations();
             _mainSymbol = currentDenomination.MainSymbol;
 
-            Run(denominations);
+            RunPOS();
         }
 
-        public static void Run(List<double> denominations)
+        public static void RunPOS()
         {
-            var calculator = new ChangeCalculatorService(denominations, _logService);
-
             Console.WriteLine("==============POS==============");
             Console.WriteLine("Enter the price of the item(s):");
             var price = double.Parse(Console.ReadLine());
@@ -41,9 +47,9 @@ namespace CashMasterPOS
                 var payment = inputPayment.Split(',').ToDictionary(p => double.Parse(p.Split(':')[0]), p => int.Parse(p.Split(':')[1]));
 
                 // Calculate the change
-                _logService.Log("Transaction process start with Total: " + _mainSymbol + price.ToString() + " and paid with $" + payment.Sum(p => p.Key * p.Value).ToString());
-                var change = calculator.CalculateChange(price, payment);
-                if (change.Item2)
+                GlobalService.LogService.Log("Transaction process start with Total: " + _mainSymbol + price.ToString() + " and paid with $" + payment.Sum(p => p.Key * p.Value).ToString());
+                var change = GlobalService.ChangeCalculatorService.CalculateChange(price, payment);
+                if (change.Count == 0)
                 {
                     Console.WriteLine("ERROR: The total payment is less than the price. Please check and try again.");
                 }
@@ -51,33 +57,33 @@ namespace CashMasterPOS
                 {
                     // Print the change
                     Console.WriteLine("Change:");
-                    var totalChange = calculator.GetTotalChange(change.Item1, _mainSymbol);
+                    var totalChange = GlobalService.ChangeCalculatorService.GetTotalChange(change, _mainSymbol);
 
-                    _logService.Log("Total change of the transaction: " + _mainSymbol + totalChange);
+                    GlobalService.LogService.Log("Total change of the transaction: " + _mainSymbol + totalChange);
                     Console.WriteLine("----------------------");
                     Console.WriteLine("TOTAL CHANGE: " + _mainSymbol + totalChange);
                     Console.WriteLine();
 
-                    _logService.Log("End of a successful transaction.");
+                    GlobalService.LogService.Log("End of a successful transaction.");
                 }
 
                 Console.WriteLine("Press ENTER for new transaction or press any other key to exit...");
                 var restart = Console.ReadKey();
                 if (restart.Key == ConsoleKey.Enter)
                 {
-                    Run(denominations);
+                    RunPOS();
                 }
             }
             catch (Exception ex)
             {
                 var error = "Error calculating change. Please check the input format and try again";
-                _logService.Log(error);
-                _logService.Log("Detailed Error: " + ex.Message);
+                GlobalService.LogService.Log(error);
+                GlobalService.LogService.Log("Detailed Error: " + ex.Message);
 
                 Console.WriteLine(error);
                 Console.WriteLine();
 
-                Run(denominations);
+                RunPOS();
             }
         }
     }
