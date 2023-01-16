@@ -28,36 +28,25 @@ namespace UnitTest_CashMasterPOS
         [TestMethod]
         public void Should_Return_Correct_Change_When_Payment_Is_Greater_Than_Price()
         {
-            var price = 750;
+            decimal price = 750;
 
             //Payment = 1000
-            var payment = new Dictionary<double, int> { { 500, 1 }, { 200, 2 }, { 100, 1 } };
+            var payment = new Dictionary<decimal, int> { { 500, 1 }, { 200, 2 }, { 100, 1 } };
 
             var change = GlobalService.ChangeCalculatorService.CalculateChange(price, payment);
-            var expected = new Dictionary<double, int> 
-            {
-                { 500,0 },
-                { 200,1 }, 
-                { 100,0 },
-                { 50,1 },
-                { 20,0 },
-                { 10,0 },
-                { 5,0 },
-                { 2,0 },
-                { 1,0 },
-                { 0.5,0 },
-                { 0.2,0 },
-                { 0.1,0 },
-                { 0.05,0 },
-            };
+
+            var expected = new List<decimal>();
+            var d1 = "200.00";
+            var d2 = "50.00";
+            expected.Add(decimal.Parse(d1));
+            expected.Add(decimal.Parse(d2));
 
             Assert.AreEqual(ToAssertableString(expected), ToAssertableString(change));
         }
 
-        public string ToAssertableString(IDictionary<double, int> dictionary)
+        private string ToAssertableString(IList<decimal> decimals)
         {
-            var pairStrings = dictionary.OrderBy(p => p.Key)
-                                        .Select(p => p.Key + ": " + string.Join(", ", p.Value));
+            var pairStrings = decimals.OrderBy(p => p);
             return string.Join("; ", pairStrings);
         }
 
@@ -67,11 +56,11 @@ namespace UnitTest_CashMasterPOS
             var price = 750;
 
             //Payment = 1000
-            var payment = new Dictionary<double, int> { { 500, 1 }, { 200, 2 }, { 100, 1 } };
+            var payment = new Dictionary<decimal, int> { { 500, 1 }, { 200, 2 }, { 100, 1 } };
 
             var change = GlobalService.ChangeCalculatorService.CalculateChange(price, payment);
             var totalChange = GlobalService.ChangeCalculatorService.GetTotalChange(change, "$");
-            var expected = "250";
+            var expected = "250.00";
 
             Assert.AreEqual(expected, totalChange);
         }
@@ -82,7 +71,7 @@ namespace UnitTest_CashMasterPOS
             var price = 750;
 
             //Payment = 750
-            var payment = new Dictionary<double, int> { { 500, 1 }, { 200, 1 }, { 50, 1 } };
+            var payment = new Dictionary<decimal, int> { { 500, 1 }, { 200, 1 }, { 50, 1 } };
 
             var change = GlobalService.ChangeCalculatorService.CalculateChange(price, payment);
             var totalChange = GlobalService.ChangeCalculatorService.GetTotalChange(change, "$");
@@ -97,7 +86,7 @@ namespace UnitTest_CashMasterPOS
             var price = 750;
 
             //Payment = 500
-            var payment = new Dictionary<double, int> { { 200, 2 }, { 100, 1 } };
+            var payment = new Dictionary<decimal, int> { { 200, 2 }, { 100, 1 } };
 
             var change = GlobalService.ChangeCalculatorService.CalculateChange(price, payment);
             var expected = 0;

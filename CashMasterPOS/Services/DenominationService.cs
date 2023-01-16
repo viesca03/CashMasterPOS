@@ -20,6 +20,10 @@ namespace CashMasterPOS.Services
             _country = ConfigurationManager.AppSettings["CurrentDenomination"];
         }
 
+        /// <summary>
+        /// Method to get all denominations from the JSON file according the current country used on the App.config file
+        /// </summary>
+        /// <returns>A DenominationRootModel object which contains the list of all the country bills and coins denominations.</returns>
         public DenominationRootModel GetDenominations()
         {
             var filePath = @"Denominations/" + _country + ".json";

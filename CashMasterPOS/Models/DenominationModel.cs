@@ -18,6 +18,6 @@ namespace CashMasterPOS.Models
         public string Image { get; set; }
         public string Symbol { get; set; }
         public string CurrencyName { get; set; }
-        public double Value { get; set; }
+        public decimal Value { get; set; }
     }
 }

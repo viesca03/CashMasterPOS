@@ -8,8 +8,8 @@ namespace CashMasterPOS.Interfaces
 {
     public interface IChangeCalculator
     {
-        Dictionary<double, int> CalculateChange(double price, Dictionary<double, int> payment);
+        List<decimal> CalculateChange(decimal price, Dictionary<decimal, int> payment);
 
-        string GetTotalChange(Dictionary<double, int> change, string mainSymbol);
+        string GetTotalChange(List<decimal> change, string mainSymbol);
     }
 }

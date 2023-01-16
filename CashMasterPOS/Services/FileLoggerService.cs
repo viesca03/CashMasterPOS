@@ -23,6 +23,10 @@ namespace CashMasterPOS.Services
             }
         }
 
+        /// <summary>
+        /// A method to insert a message in the Log File which is saved in the path provided in the App.config file.
+        /// </summary>
+        /// <param name="message">The message to save in the file as a string</param>
         public void Log(string message)
         {
             using (var streamWriter = new StreamWriter(_filePath, true))

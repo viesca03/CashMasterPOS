@@ -34,17 +34,27 @@ namespace CashMasterPOS
             RunPOS();
         }
 
+        /// <summary>
+        /// A method to run and restart the user interface when the process finish or an error is found
+        /// </summary>
+
         public static void RunPOS()
         {
             Console.WriteLine("==============POS==============");
             Console.WriteLine("Enter the price of the item(s):");
-            var price = double.Parse(Console.ReadLine());
+
+            if (!decimal.TryParse(Console.ReadLine(), out decimal price))
+            {
+                Console.WriteLine("Invalid price, enter only numbers.");
+                RunPOS();
+            }
+
             Console.WriteLine("Enter the payment (in the format denomination:quantity,denomination:quantity,...)");
             var inputPayment = Console.ReadLine();
 
             try
             {
-                var payment = inputPayment.Split(',').ToDictionary(p => double.Parse(p.Split(':')[0]), p => int.Parse(p.Split(':')[1]));
+                var payment = inputPayment.Split(',').ToDictionary(p => decimal.Parse(p.Split(':')[0]), p => int.Parse(p.Split(':')[1]));
 
                 // Calculate the change
                 GlobalService.LogService.Log("Transaction process start with Total: " + _mainSymbol + price.ToString() + " and paid with $" + payment.Sum(p => p.Key * p.Value).ToString());
