@@ -40,6 +40,7 @@ namespace CashMasterPOS
 
         public static void RunPOS()
         {
+            Console.WriteLine();
             Console.WriteLine("==============POS==============");
             Console.WriteLine("Enter the price of the item(s):");
 
@@ -56,27 +57,52 @@ namespace CashMasterPOS
             {
                 var payment = inputPayment.Split(',').ToDictionary(p => decimal.Parse(p.Split(':')[0]), p => int.Parse(p.Split(':')[1]));
 
-                // Calculate the change
-                GlobalService.LogService.Log("Transaction process start with Total: " + _mainSymbol + price.ToString() + " and paid with $" + payment.Sum(p => p.Key * p.Value).ToString());
-                var change = GlobalService.ChangeCalculatorService.CalculateChange(price, payment);
-                if (change.Count == 0)
+                //Check if all denominations in input are in the JSON denominations file
+                var denominationError = GlobalService.DenominationService.CheckIfDenimonationError(payment.Select(p => p.Key).ToList());
+                if (denominationError.Count != 0)
                 {
-                    Console.WriteLine("ERROR: The total payment is less than the price. Please check and try again.");
+                    var error = $"Denomination(s) {string.Join(",", denominationError)} not found in current country denomination. Use a different denomination to pay or change the denominations json file";
+                    GlobalService.LogService.Log(error);
+                    Console.WriteLine(error);
                 }
                 else
                 {
-                    // Print the change calculation result and total change
-                    Console.WriteLine("Change:");
-                    var totalChange = GlobalService.ChangeCalculatorService.GetTotalChange(change, _mainSymbol);
+                    // Calculate the change
+                    GlobalService.LogService.Log($"Transaction process start with Total: {_mainSymbol}{price} and paid with {_mainSymbol} {payment.Sum(p => p.Key * p.Value)}");
+                    var isValidTransaction = GlobalService.ChangeCalculatorService.IsValidTransaction(price, payment);
 
-                    GlobalService.LogService.Log("Total change of the transaction: " + _mainSymbol + totalChange);
-                    Console.WriteLine("----------------------");
-                    Console.WriteLine("TOTAL CHANGE: " + _mainSymbol + totalChange);
-                    Console.WriteLine();
+                    if (!isValidTransaction)
+                    {
+                        Console.WriteLine("ERROR: The total payment is less than the price. Please check and try again.");
+                    }
+                    else
+                    {
+                        var change = GlobalService.ChangeCalculatorService.CalculateChange(price, payment);
 
-                    GlobalService.LogService.Log("End of a successful transaction.");
+                        // Print the change calculation result and total change
+                        var totalChange = GlobalService.ChangeCalculatorService.GetTotalChange(change, _mainSymbol);
+
+                        var difference = GlobalService.ChangeCalculatorService.GetChangeDifference(price, payment, totalChange);
+
+                        GlobalService.LogService.Log($"Total change of the transaction: {_mainSymbol}{totalChange}");
+                        Console.WriteLine("----------------------");
+                        Console.WriteLine($"TOTAL CHANGE: {_mainSymbol}{totalChange}");
+                        Console.WriteLine();
+
+                        if (difference > 0)
+                        {
+                            var warning = $"The current denomination list doesn't have the capability to deliver exact change. \nPending Change: {difference}";
+                            Console.WriteLine(warning);
+                            GlobalService.LogService.Log("End of a successful transaction. With amount difference warning.");
+                        }
+                        else
+                        {
+                            GlobalService.LogService.Log("End of a successful transaction.");
+                        }
+                    }
                 }
 
+                Console.WriteLine();
                 Console.WriteLine("Press ENTER for new transaction or press any other key to exit...");
                 var restart = Console.ReadKey();
                 if (restart.Key == ConsoleKey.Enter)
@@ -88,7 +114,7 @@ namespace CashMasterPOS
             {
                 var error = "Error calculating change. Please check the input format and try again";
                 GlobalService.LogService.Log(error);
-                GlobalService.LogService.Log("Detailed Error: " + ex.Message);
+                GlobalService.LogService.Log($"Detailed Error: {ex.Message}");
 
                 Console.WriteLine(error);
                 Console.WriteLine();

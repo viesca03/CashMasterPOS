@@ -10,5 +10,7 @@ namespace CashMasterPOS.Interfaces
     public interface IDenomination
     {
         DenominationRootModel GetDenominations();
+
+        List<decimal> CheckIfDenimonationError(List<decimal> payment);
     }
 }

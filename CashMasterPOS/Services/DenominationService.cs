@@ -31,5 +31,14 @@ namespace CashMasterPOS.Services
             var result = JsonConvert.DeserializeObject<DenominationRootModel>(json);
             return result;
         }
+
+        public List<decimal> CheckIfDenimonationError(List<decimal> payment)
+        {
+            var denominations = GetDenominations().Denominations.Select(d => d.Value).ToList();
+
+            var denominationDifference = payment.Where(p => !denominations.Contains(p)).ToList();
+            
+            return denominationDifference;
+        }
     }
 }

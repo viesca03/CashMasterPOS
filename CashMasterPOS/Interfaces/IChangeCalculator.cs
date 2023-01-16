@@ -10,6 +10,10 @@ namespace CashMasterPOS.Interfaces
     {
         List<decimal> CalculateChange(decimal price, Dictionary<decimal, int> payment);
 
-        string GetTotalChange(List<decimal> change, string mainSymbol);
+        decimal GetTotalChange(List<decimal> change, string mainSymbol);
+
+        bool IsValidTransaction(decimal price, Dictionary<decimal, int> payment);
+
+        decimal GetChangeDifference(decimal price, Dictionary<decimal, int> payment, decimal change);
     }
 }
