@@ -29,6 +29,8 @@ namespace UnitTest_CashMasterPOS
         public void Should_Return_Correct_Change_When_Payment_Is_Greater_Than_Price()
         {
             var price = 750;
+
+            //Payment = 1000
             var payment = new Dictionary<double, int> { { 500, 1 }, { 200, 2 }, { 100, 1 } };
 
             var change = GlobalService.ChangeCalculatorService.CalculateChange(price, payment);
@@ -63,6 +65,8 @@ namespace UnitTest_CashMasterPOS
         public void Should_Return_Correct_Total_Change_Amount_When_Payment_Greater_Than_Price()
         {
             var price = 750;
+
+            //Payment = 1000
             var payment = new Dictionary<double, int> { { 500, 1 }, { 200, 2 }, { 100, 1 } };
 
             var change = GlobalService.ChangeCalculatorService.CalculateChange(price, payment);
@@ -76,6 +80,8 @@ namespace UnitTest_CashMasterPOS
         public void Should_Return_Correct_Total_Change_Amount_When_Payment_Equals_To_Price()
         {
             var price = 750;
+
+            //Payment = 750
             var payment = new Dictionary<double, int> { { 500, 1 }, { 200, 1 }, { 50, 1 } };
 
             var change = GlobalService.ChangeCalculatorService.CalculateChange(price, payment);
@@ -89,6 +95,8 @@ namespace UnitTest_CashMasterPOS
         public void Should_Return_Change_Count_0_When_Payment_Is_Less_Than_Price()
         {
             var price = 750;
+
+            //Payment = 500
             var payment = new Dictionary<double, int> { { 200, 2 }, { 100, 1 } };
 
             var change = GlobalService.ChangeCalculatorService.CalculateChange(price, payment);

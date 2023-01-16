@@ -16,6 +16,7 @@ namespace CashMasterPOS.Services
             var result = new Dictionary<double, int>();
 
             var denominations = GlobalService.DenominationService.GetDenominations().Denominations.Select(d => d.Value).ToList();
+
             //Verify that the total payment is greater than or equal to the price
             double totalPayment = payment.Sum(p => p.Key * p.Value);
 
@@ -47,6 +48,7 @@ namespace CashMasterPOS.Services
 
         public string GetTotalChange(Dictionary<double, int> change, string mainSymbol)
         {
+            //Iterate through the change result to sum values greater than 0 and get total change
             foreach (var denomination in change)
             {
                 if (denomination.Value != 0)

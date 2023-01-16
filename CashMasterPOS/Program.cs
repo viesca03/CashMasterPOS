@@ -55,7 +55,7 @@ namespace CashMasterPOS
                 }
                 else
                 {
-                    // Print the change
+                    // Print the change calculation result and total change
                     Console.WriteLine("Change:");
                     var totalChange = GlobalService.ChangeCalculatorService.GetTotalChange(change, _mainSymbol);
 
